@@ -3,6 +3,8 @@ import ResourceCard from '@/components/ResourceCard'
 import SearchForm from '@/components/SearchForm'
 import { getResources } from '@/sanity/schemas/actions'
 
+export const revalidate = 900;
+
 const Homepage = async () => {
 
   const resources = await getResources({
@@ -24,9 +26,19 @@ const Homepage = async () => {
         <Filters />
         <section className='flex-center mt-6 w-full flex-col sm:mt-20'>
           Header
-          <div className='mt-12 felx flex-wrap w-full justify-center gap-16 sm:justify-start'>
+          <div className='mt-12 flex flex-wrap w-full justify-center gap-16 sm:justify-start'>
             {resources.length > 0 ? (resources.map((resource: any) => (
-              <ResourceCard />
+              <ResourceCard 
+                key={resource._id}
+                id={resource._id}
+                title={resource.title}
+                // category={resource.category}
+
+                // downloadLink={resource.downloadLink}
+                image={resource.image}
+                views={resource.views}
+                url={resource._id}
+              />
             ))) : (
               <p className='body-regular text-white-400'>
                 No Resources found.
