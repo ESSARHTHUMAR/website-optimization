@@ -1,15 +1,20 @@
 import Filters from '@/components/Filters'
+import Header from '@/components/Header';
 import ResourceCard from '@/components/ResourceCard'
 import SearchForm from '@/components/SearchForm'
 import { getResources } from '@/sanity/schemas/actions'
 
 export const revalidate = 900;
 
-const Homepage = async () => {
+interface Props {
+  searchParams: {[key: string]: string | undefined }
+}
+
+const Homepage = async ({ searchParams }: Props) => {
 
   const resources = await getResources({
-    query: '',
-    category: '',
+    query: searchParams?.query || '',
+    category: searchParams?.category || '',
     page: '1',
   })
   
@@ -24,10 +29,17 @@ const Homepage = async () => {
         </div>
         <SearchForm />
         <Filters />
-        <section className='flex-center mt-6 w-full flex-col sm:mt-20'>
-          Header
+        
+
+        {(searchParams?.query || searchParams?.category) && (
+          <section className='flex-center mt-6 w-full flex-col sm:mt-20'>
+          <Header 
+            title="Most Popular Resources"
+            category={searchParams?.category || ''}
+            query={searchParams?.query || ''}
+           />
           <div className='mt-12 flex flex-wrap w-full justify-center gap-16 sm:justify-start'>
-            {resources.length > 0 ? (resources.map((resource: any) => (
+            {resources?.length > 0 ? (resources?.map((resource: any) => (
               <ResourceCard 
                 key={resource._id}
                 id={resource._id}
@@ -46,7 +58,9 @@ const Homepage = async () => {
             )}
           </div>
         </section>
+        )}
       </section>
+
     </main>
   )
 }
