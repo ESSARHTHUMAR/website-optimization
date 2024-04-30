@@ -1,15 +1,15 @@
-import qs from "query-string";
+import qs from 'query-string'
 
 interface BuildQueryParams {
-    type: string,
-    query: string,
-    category: string,
-    page: number,
-    perPage?: number
+  type: string;
+  query: string;
+  category: string;
+  page: number;
+  perPage?: number;
 }
 
 export function buildQuery(params: BuildQueryParams) {
-    const { type, query, category, page = 1, perPage = 20 } = params;
+  const { type, query, category, page = 1, perPage = 20 } = params;
 
   const conditions = [`*[_type=="${type}"`];
 
@@ -31,28 +31,25 @@ export function buildQuery(params: BuildQueryParams) {
 }
 
 interface UrlQueryParams {
-    params: string;
-    key?: string;
-    value?: string | null;
-    keysToRemove?: string[];
+  params: string;
+  key?: string;
+  value?: string | null;
+  keysToRemove?: string[];
 }
 
-export function formUrlQuery ({ params, key, value, keysToRemove } : UrlQueryParams) {
-    const currentUrl = qs.parse(params);
-        
-    if(keysToRemove){
-        keysToRemove.forEach((keyToRemove) => {
-            delete currentUrl[keyToRemove]
-        })
-    }       
-    else if(key && value){
-        currentUrl[key] = value;
-    }
+export function formUrlQuery({ params, key, value, keysToRemove }: UrlQueryParams) {
+  const currentUrl = qs.parse(params);
 
+  if(keysToRemove) {
+    keysToRemove.forEach((keyToRemove) => {
+      delete currentUrl[keyToRemove];
+    })
+  } else if(key && value) {
+    currentUrl[key] = value;
+  }
 
-    return qs.stringifyUrl(
-        { url: window.location.pathname, query: currentUrl },
-        { skipNull: true}
-    )
-    
+  return qs.stringifyUrl(
+    { url: window.location.pathname, query: currentUrl },
+    { skipNull: true }
+  )
 }

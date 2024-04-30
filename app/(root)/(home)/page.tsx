@@ -2,7 +2,7 @@ import Filters from '@/components/Filters'
 import Header from '@/components/Header';
 import ResourceCard from '@/components/ResourceCard'
 import SearchForm from '@/components/SearchForm'
-import { getResources } from '@/sanity/schemas/actions'
+import { getResources, getResourcesPlaylist } from '@/sanity/schemas/actions'
 
 export const revalidate = 900;
 
@@ -17,6 +17,9 @@ const Homepage = async ({ searchParams }: Props) => {
     category: searchParams?.category || '',
     page: '1',
   })
+  
+  const resourcesPlaylist = await getResourcesPlaylist(); 
+  console.log(resourcesPlaylist);
   
 
   return (
@@ -46,7 +49,7 @@ const Homepage = async ({ searchParams }: Props) => {
                 title={resource.title}
                 // category={resource.category}
 
-                // downloadLink={resource.downloadLink}
+                downloadLink={resource.downloadLink}
                 image={resource.image}
                 views={resource.views}
                 url={resource._id}
@@ -60,6 +63,24 @@ const Homepage = async ({ searchParams }: Props) => {
         </section>
         )}
       </section>
+
+      {resourcesPlaylist.map((item: any) => (
+        <section key={item._id} className="flex-center mt-6 w-full flex-col sm:mt-20">
+          <h1 className='text-white-800 heading3 self-start'>{item.title}</h1>
+          <div className='mt-12 flex w-full flex-wrap justify-center gap-16 sm:justify-start'>
+            {item.resources.map((resource: any) => (
+              <ResourceCard 
+                key={resource._id}
+                title={resource.title}
+                id={resource._id}
+                image={resource.image}
+                views={resource.views}
+                downloadLink={resource.downloadLink}
+              />
+            ))}
+          </div>  
+        </section>
+      ))} 
 
     </main>
   )
